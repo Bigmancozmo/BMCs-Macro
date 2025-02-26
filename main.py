@@ -26,6 +26,9 @@ try:
 	winW = s['width']
 	winH = s['height']
 
+	appName = "BMC's Macro"
+	version = "alpha-0.1.1"
+
 	win = Tk()
 	win.title("BMC's Macro")
 	win.geometry(str(winW) + 'x' + str(winH) + '+300+120')
@@ -57,8 +60,8 @@ try:
 						"title": "Biome Started",
 						"description": "# Snowy\n" + server_join,
 						"color": 13299967,
-						"image": {
-							"url": ""
+						"footer": {
+							"text": appName + " - " + version + " - [download](<https://github.com/Bigmancozmo/BMCs-Macro/releases>)"
 						},
 						"thumbnail": {
 							"url": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"

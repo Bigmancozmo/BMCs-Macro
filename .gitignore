@@ -3,3 +3,5 @@ __pycache__
 settings/biome_webhook_url
 settings/ps_link
 lastRun.log
+extract-test
+*.zip
