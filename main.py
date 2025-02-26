@@ -5,7 +5,7 @@ try:
 	from tkinter import ttk
 	import tkinter.font as tkFont
 
-	import ctypes, time
+	import ctypes, time, json, requests
 
 	from widgets.root import Root
 	from widgets.header import Header
@@ -19,6 +19,9 @@ try:
 	# Code
 
 	print("Starting...")
+
+	with open("data/biomes.json", "r") as file:
+		biome_data = json.load(file)
 
 	winW = s['width']
 	winH = s['height']
@@ -43,7 +46,41 @@ try:
 	tracker = BiomeTracker()
 
 	def onBiomeChange(biome):
+		whUrl = config.get_biome_webhook_url()
+		if biome in biome_data:
+			data = {
+				"embeds": [
+					{
+						"title": "Biome Started",
+						"description": "# Snowy",
+						"color": 13299967,
+						"image": {
+							"url": ""
+						},
+						"thumbnail": {
+							"url": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"
+						}
+					}
+				]
+			}
+			data["embeds"][0]["description"] = "# " + str(biome_data[biome]["name"])
+			data["embeds"][0]["color"] = int(biome_data[biome]["color"])
+			requests.post(whUrl, json=data)
+		else:
+			requests.post(whUrl, json={"content":"Biome without data spawned - " + biome})
+
 		print(biome)
+
+	onBiomeChange("NORMAL")
+	onBiomeChange("SNOWY")
+	onBiomeChange("RAINY")
+	onBiomeChange("WINDY")
+	onBiomeChange("CORRUPTION")
+	onBiomeChange("STARFALL")
+	onBiomeChange("NULL")
+	onBiomeChange("HELL")
+	onBiomeChange("GLITCHED")
+	onBiomeChange("DREAMSPACE")
 
 	tracker.register_biome_change_callback(onBiomeChange)
 
@@ -86,9 +123,9 @@ try:
 	print("Bye!")
 	time.sleep(1)
 except:
-    import traceback
-    with open("lastRun.log",'w') as a:
-        a.write(traceback.format_exc())
+	import traceback
+	with open("lastRun.log",'w') as a:
+		a.write(traceback.format_exc())
 else:
-    with open("lastRun.log",'w') as a:
-        a.write("OK")
+	with open("lastRun.log",'w') as a:
+		a.write("OK")
