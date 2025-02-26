@@ -47,12 +47,13 @@ try:
 
 	def onBiomeChange(biome):
 		whUrl = config.get_biome_webhook_url()
+		server_join = "[Join Server](<https://google.com>)"
 		if biome in biome_data:
 			data = {
 				"embeds": [
 					{
 						"title": "Biome Started",
-						"description": "# Snowy",
+						"description": "# Snowy\n" + server_join,
 						"color": 13299967,
 						"image": {
 							"url": ""
@@ -63,11 +64,14 @@ try:
 					}
 				]
 			}
-			data["embeds"][0]["description"] = "# " + str(biome_data[biome]["name"])
+
+			data["embeds"][0]["description"] = "# " + str(biome_data[biome]["name"]) + "\n" + server_join
+			data["embeds"][0]["thumbnail"]["url"] = str(biome_data[biome]["image"])
 			data["embeds"][0]["color"] = int(biome_data[biome]["color"])
+			
 			requests.post(whUrl, json=data)
 		else:
-			requests.post(whUrl, json={"content":"Biome without data spawned - " + biome})
+			requests.post(whUrl, json={"content":"Biome without data spawned - " + biome + "\n" + server_join})
 
 		print(biome)
 
