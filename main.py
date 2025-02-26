@@ -47,7 +47,9 @@ try:
 
 	def onBiomeChange(biome):
 		whUrl = config.get_biome_webhook_url()
-		server_join = "[Join Server](<https://google.com>)"
+		server_join = "[Join Server](<" + config.get_ps_link() + ">)"
+		if config.get_ps_link() == "":
+			server_join = "No PS link provided!"
 		if biome in biome_data:
 			data = {
 				"embeds": [
@@ -65,6 +67,9 @@ try:
 				]
 			}
 
+			if biome == "GLITCHED" or biome == "DREAMSPACE":
+				data["content"] = "@everyone " + config.get_ps_link()
+
 			data["embeds"][0]["description"] = "# " + str(biome_data[biome]["name"]) + "\n" + server_join
 			data["embeds"][0]["thumbnail"]["url"] = str(biome_data[biome]["image"])
 			data["embeds"][0]["color"] = int(biome_data[biome]["color"])
@@ -74,17 +79,6 @@ try:
 			requests.post(whUrl, json={"content":"Biome without data spawned - " + biome + "\n" + server_join})
 
 		print(biome)
-
-	onBiomeChange("NORMAL")
-	onBiomeChange("SNOWY")
-	onBiomeChange("RAINY")
-	onBiomeChange("WINDY")
-	onBiomeChange("CORRUPTION")
-	onBiomeChange("STARFALL")
-	onBiomeChange("NULL")
-	onBiomeChange("HELL")
-	onBiomeChange("GLITCHED")
-	onBiomeChange("DREAMSPACE")
 
 	tracker.register_biome_change_callback(onBiomeChange)
 
@@ -116,10 +110,26 @@ try:
 		config.set_biome_webhook_url(val)
 		ctypes.windll.user32.MessageBoxW(0, "Webhook updated!", "Success", 0)
 
+		onBiomeChange("NORMAL")
+		onBiomeChange("SNOWY")
+		onBiomeChange("RAINY")
+		onBiomeChange("WINDY")
+		onBiomeChange("CORRUPTION")
+		onBiomeChange("STARFALL")
+		onBiomeChange("NULL")
+		onBiomeChange("HELL")
+		onBiomeChange("GLITCHED")
+		onBiomeChange("DREAMSPACE")
+	
+	def submit_ps_link(value):
+		config.set_ps_link(str(value))
+
 	menu_frame.update_idletasks()
 	# 35px y increment
 	biome_webhook_input = TextInput(menu_frame, menu_frame.winfo_width(), height=10, optionName="Biome Webhook URL", clicked=submit_biome_webhook, entryPad=3, setText=config.get_biome_webhook_url())
 	biome_webhook_input.place(x=0,y=0)
+	ps_link_input = TextInput(menu_frame, menu_frame.winfo_width(), height=10, optionName="Private Server URL", clicked=submit_ps_link, entryPad=2, setText=config.get_ps_link())
+	ps_link_input.place(x=0,y=35)
 
 	print("Started!")
 	win.after(1000, show_window)
