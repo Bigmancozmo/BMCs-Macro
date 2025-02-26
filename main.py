@@ -109,17 +109,6 @@ try:
 			return
 		config.set_biome_webhook_url(val)
 		ctypes.windll.user32.MessageBoxW(0, "Webhook updated!", "Success", 0)
-
-		onBiomeChange("NORMAL")
-		onBiomeChange("SNOWY")
-		onBiomeChange("RAINY")
-		onBiomeChange("WINDY")
-		onBiomeChange("CORRUPTION")
-		onBiomeChange("STARFALL")
-		onBiomeChange("NULL")
-		onBiomeChange("HELL")
-		onBiomeChange("GLITCHED")
-		onBiomeChange("DREAMSPACE")
 	
 	def submit_ps_link(value):
 		config.set_ps_link(str(value))
