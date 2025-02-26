@@ -1,12 +1,53 @@
 {
-    "NORMAL": {
-        "name": "Normal",
-        "color": 5565262,
-        "image": ""
-    },
-    "SNOWY": {
-        "name": "Snowy",
-        "color": 13299967,
-        "image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"
-    }
+	"CORRUPTION": {
+		"name": "Corruption",
+		"color": 8005887,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Corruption.png"
+	},
+	"DREAMSPACE": {
+		"name": "Dreamspace",
+		"color": 16416255,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Dreamspace.png"
+	},
+	"GLITCHED": {
+		"name": "Glitched",
+		"color": 7697781,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Glitched.png"
+	},
+	"NORMAL": {
+		"name": "Normal",
+		"color": 5565262,
+		"image": ""
+	},
+	"SNOWY": {
+		"name": "Snowy",
+		"color": 13299967,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"
+	},
+
+	"RAINY": {
+		"name": "Rainy",
+		"color": 3357695,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Rainy.png"
+	},
+	"WINDY": {
+		"name": "Windy",
+		"color": 13299967,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Windy.png"
+	},
+	"STARFALL": {
+		"name": "Starfall",
+		"color": 6442495,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Starfall.png"
+	},
+	"NULL": {
+		"name": "Null",
+		"color": 2105376,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Null.png"
+	},
+	"HELL": {
+		"name": "Hell",
+		"color": 10354688,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Hell.png"
+	}
 }
