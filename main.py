@@ -27,7 +27,7 @@ try:
 	winH = s['height']
 
 	appName = "BMC's Macro"
-	version = "alpha-0.1.1"
+	version = "alpha-0.1.2"
 
 	win = Tk()
 	win.title("BMC's Macro")
@@ -61,7 +61,7 @@ try:
 						"description": "# Snowy\n" + server_join,
 						"color": 13299967,
 						"footer": {
-							"text": appName + " - " + version + " - [download](<https://github.com/Bigmancozmo/BMCs-Macro/releases>)"
+							"text": appName + " / " + version
 						},
 						"thumbnail": {
 							"url": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"
