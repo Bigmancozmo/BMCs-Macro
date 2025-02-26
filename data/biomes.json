@@ -24,7 +24,6 @@
 		"color": 13299967,
 		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Snowy.png"
 	},
-
 	"RAINY": {
 		"name": "Rainy",
 		"color": 3357695,
@@ -49,5 +48,10 @@
 		"name": "Hell",
 		"color": 10354688,
 		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Hell.png"
+	},
+	"SAND STORM": {
+		"name": "Sandstorm",
+		"color": 16771449,
+		"image": "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/data/img/Sandstorm.png"
 	}
 }
