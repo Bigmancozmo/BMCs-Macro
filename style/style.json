@@ -1,0 +1,9 @@
+{
+    "bg": "#222",
+    "outline": "#555",
+    "inputBg": "#333",
+    "text": "#fff",
+    "width": 500,
+    "height": 250,
+    "paddingSize": 2
+}
