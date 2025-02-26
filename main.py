@@ -114,7 +114,12 @@ try:
 		ctypes.windll.user32.MessageBoxW(0, "Webhook updated!", "Success", 0)
 	
 	def submit_ps_link(value):
-		config.set_ps_link(str(value))
+		val = str(value)
+		if (val.find("https://www.roblox.com/share?code=") == -1) and (val.find("https://www.roblox.com/games/15532962292/Sols-RNG?privateServerLinkCode=") == -1):
+			ctypes.windll.user32.MessageBoxW(0, "Invalid server URL! Change it, and try again.\n(URL was not a share code and not Sol's RNG)", "Invalid URL", 0)
+			return
+		config.set_ps_link(val)
+		ctypes.windll.user32.MessageBoxW(0, "Server link updated!", "Success", 0)
 
 	menu_frame.update_idletasks()
 	# 35px y increment
