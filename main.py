@@ -53,7 +53,11 @@ try:
 		server_join = "[Join Server](<" + config.get_ps_link() + ">)"
 		if config.get_ps_link() == "":
 			server_join = "No PS link provided!"
+		if not ("https://" in whUrl):
+			print("Biome detected - but no webhook was found! (" + biome + ")")
+			return
 		if biome in biome_data:
+			print("Biome detected - " + biome_data[biome]["name"])
 			data = {
 				"embeds": [
 					{
@@ -139,4 +143,4 @@ except:
 		a.write(traceback.format_exc())
 else:
 	with open("lastRun.log",'w') as a:
-		a.write("OK")
+		a.write(traceback.format_exc())
