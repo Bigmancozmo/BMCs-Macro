@@ -164,23 +164,27 @@ class SettingsCoordinateOption(tk.CTkFrame):
 		self.pick_button = tk.CTkButton(self, text="Pick Coordinates", command=self.on_pick_button, width=130)
 		self.pick_button.grid(row=0, column=1)
 
-class SettingsCoordinateWindow(tk.CTkToplevel):
-	def add_option(self, label, optionName):
-		option = SettingsCoordinateOption(self, label, optionName+"X", optionName+"Y")
-		option.grid(row=self.option_count, column=0, pady=3)
-		self.option_count += 1
-
+class SetCoordinatesWindow(tk.CTkToplevel):
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
 
-		self.title("Edit Button Coordinates")
-		self.geometry(str(coordinate_config_width)+"x450")
+		self.option_count = 0
 		self.resizable(False, False)
 		self.lift()
 		self.focus_force()
 		self.attributes("-topmost", True)
 
-		self.option_count = 0
+	def add_option(self, label, optionName):
+		option = SettingsCoordinateOption(self, label, optionName+"X", optionName+"Y")
+		option.grid(row=self.option_count, column=0, pady=3)
+		self.option_count += 1
+
+class SettingsCoordinateWindow(SetCoordinatesWindow):
+	def __init__(self, master, **kwargs):
+		super().__init__(master, **kwargs)
+
+		self.title("Edit Button Coordinates")
+		self.geometry(str(coordinate_config_width)+"x450")
 
 		self.add_option("Inventory Button", "invBtnPos")
 		self.add_option("Inventory Items Tab", "invItemsTabPos")
