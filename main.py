@@ -167,14 +167,17 @@ def walk_to_questboard():
 	time.sleep(0.5)
 	
 	ahk.run_script('''
+		WinActivate, Roblox
+		WinWaitActive, Roblox
+
 		WinGetPos, X, Y, W, H, Roblox
 		CenterX := X + W // 2
 		CenterY := Y + H // 2
 
 		MouseMove, %CenterX%, %CenterY%, 0
-		MouseDown, right
+		MouseClick, right, , , , D
 		MouseMove, %CenterX%, % (CenterY + 100), 0
-		MouseUp, right
+		MouseClick, right, , , , U
 	''')
 
 	time.sleep(0.5)
