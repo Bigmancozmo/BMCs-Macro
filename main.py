@@ -13,23 +13,35 @@ ahk.set_coord_mode('Mouse', 'Screen')
 config_path = "config.json"
 default_config = {
 	"useAbyssalHunter": False,
-	"invBtnPosX": 0,
-	"invBtnPosY": 0,
-	"invItemsTabPosX": 0,
-	"invItemsTabPosY": 0,
-	"genericCloseX": 0,
-	"genericCloseY": 0,
-	"collBtnX": 0,
-	"collBtnY": 0,
-	"invSearchX": 0,
-	"invSearchY": 0,
-	"invFirstItemSlotX": 0,
-	"invFirstItemSlotY": 0,
-	"itemUseBtnX": 0,
-	"itemUseBtnY": 0,
-	"auraEquipBtnX": 0,
-	"auraEquipBtnY": 0,
+	"invBtnPosX": 10,
+	"invBtnPosY": 10,
+	"invItemsTabPosX": 10,
+	"invItemsTabPosY": 10,
+	"genericCloseX": 10,
+	"genericCloseY": 10,
+	"collBtnX": 10,
+	"collBtnY": 10,
+	"collExitX": 10,
+	"collExitY": 10,
+	"invSearchX": 10,
+	"invSearchY": 10,
+	"invFirstItemSlotX": 10,
+	"invFirstItemSlotY": 10,
+	"itemUseBtnX": 10,
+	"itemUseBtnY": 10,
+	"auraEquipBtnX": 10,
+	"auraEquipBtnY": 10,
 	"autoEquipAura": "Common",
+
+	# Questboard
+	"qbTakeLuckyPotion": True,
+	"qbTakeSpeedPotion": False,
+	"qbRightBtnX": 10,
+	"qbRightBtnY": 10,
+	"qbClaimBtnX": 10,
+	"qbClaimBtnY": 10,
+	"qbDismissBtnX": 10,
+	"qbDismissBtnY": 10,
 }
 
 if os.path.exists(config_path):
@@ -144,6 +156,38 @@ def use_item(name):
 	click_pos("genericClose")
 	time.sleep(1)
 
+def walk_to_questboard():
+	click_pos("collBtn")
+	click_pos("collExit")
+	ahk.send("{Escape}")
+	time.sleep(0.5)
+	ahk.send("R")
+	time.sleep(0.5)
+	ahk.send("{Enter}")
+	time.sleep(0.5)
+	
+	ahk.run_script('''
+		WinGetPos, X, Y, W, H, Roblox
+		CenterX := X + W // 2
+		CenterY := Y + H // 2
+
+		MouseMove, %CenterX%, %CenterY%, 0
+		MouseDown, right
+		MouseMove, %CenterX%, % (CenterY + 100), 0
+		MouseUp, right
+	''')
+
+	time.sleep(0.5)
+	ahk.key_down('s')
+	time.sleep(3.6)
+	ahk.key_press('space')
+	time.sleep(2.0)
+	ahk.key_up('s')
+	ahk.key_down('d')
+	time.sleep(1.5)
+	ahk.key_up('d')
+	
+
 class SettingsCoordinateOption(tk.CTkFrame):
 	def on_pick_button(self):
 		clickX, clickY = get_click_coordinates()
@@ -194,6 +238,7 @@ class SettingsCoordinateWindow(SetCoordinatesWindow):
 		self.add_option("Inventory First Item Slot", "invFirstItemSlot")
 		self.add_option("Aura Equip Button", "auraEquipBtn")
 		self.add_option("Collection Button", "collBtn")
+		self.add_option("Collection Exit Button", "collExit")
 
 class SettingsTab(tk.CTkFrame):
 	def on_edit_coordinates_button(self):
@@ -218,6 +263,7 @@ class Tabber(tk.CTkTabview):
 		self.add("Merchant")
 		self.add("Item Use")
 		self.add("Settings")
+		self.add("Questboard")
 		self.add("About")
 		
 		self.settings_tab = SettingsTab(master=self.tab("Settings"))
@@ -291,9 +337,10 @@ class App(tk.CTk):
 		threading.Thread(target=self.run_macro, daemon=True).start()
 	
 	def run_macro(self):
-		use_item("Biome Randomizer")
-		use_item("Strange Controller")
+		#use_item("Biome Randomizer")
+		#use_item("Strange Controller")
 		#equip_aura(config["autoEquipAura"])
+		walk_to_questboard()
 
 	def on_stop(self, event):
 		global status
