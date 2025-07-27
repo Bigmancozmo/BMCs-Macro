@@ -291,9 +291,25 @@ class QuestboardTab(tk.CTkFrame):
 			return
 		self.set_coords_win = QuestboardCoordinatesWindow(self)
 
+	def collect_luckies_toggled(self):
+		config["qbTakeLuckyPotion"] = self.lucky_potion_checkbox.get() == 1
+
+	def collect_speeds_toggled(self):
+		config["qbTakeSpeedPotion"] = self.lucky_potion_checkbox.get() == 1
+
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
 		
+		self.lucky_potion_checkbox = tk.CTkCheckBox(self, text="Collect Lucky Potions", command=self.collect_luckies_toggled)
+		if config["qbTakeLuckyPotion"]:
+			self.lucky_potion_checkbox.toggle();
+		self.lucky_potion_checkbox.pack()
+
+		self.speed_potion_checkbox = tk.CTkCheckBox(self, text="Collect Speed Potions", command=self.collect_speeds_toggled)
+		if config["qbTakeSpeedPotion"]:
+			self.speed_potion_checkbox.toggle();
+		self.speed_potion_checkbox.pack()
+
 		self.edit_coordinates_button = tk.CTkButton(self, text="Edit Coordinates", command=self.on_edit_coordinates_button, width=150)
 		self.edit_coordinates_button.pack()
 

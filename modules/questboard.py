@@ -50,8 +50,8 @@ def handle(config):
         root.mainloop()
 
         itemsToGet = {
-            "Lucky P": True,
-            "Speed P": True
+            "Lucky P": config["qbTakeLuckyPotion"],
+            "Speed P": config["qbTakeSpeedPotion"]
         }
 
         found = any(item in text and enabled for item, enabled in itemsToGet.items())
