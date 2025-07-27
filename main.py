@@ -55,7 +55,19 @@ if os.path.exists(config_path):
 else:
 	config = default_config.copy()
 
-print(config)
+def close_chat():
+	ahk.run_script('''
+		WinActivate, Roblox
+		WinWaitActive, Roblox
+		CoordMode, Mouse, Client
+		MouseMove, 129, 27
+	''')
+
+	x, y = auto.position()
+	color = auto.screenshot().getpixel((x, y))
+	r, g, b = color
+	if r > 230 and g > 230 and b > 230:
+		auto.leftClick()
 
 def get_click_coordinates():
 	print("Click anywhere on the screen...")
@@ -400,6 +412,7 @@ class App(tk.CTk):
 	
 	def run_macro(self):
 		while True:
+			close_chat()
 			use_item("Biome Randomizer")
 			use_item("Strange Controller")
 			equip_aura(config["autoEquipAura"])
