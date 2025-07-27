@@ -30,33 +30,39 @@ def handle(config):
     x, y = win.left + (3 * win.width // 4), win.top + 350
     region = (x, y, (w // 4)-20, h)
 
-    click_pos("qbRightBtn")
+    for i in range(5):
+        click_pos("qbRightBtn")
 
-    screenshot = auto.screenshot(region=region)
-    text = pytesseract.image_to_string(screenshot)
+        screenshot = auto.screenshot(region=region)
+        text = pytesseract.image_to_string(screenshot)
 
-    root = tk.Tk()
-    root.overrideredirect(True)
-    root.geometry(f"{region[2]}x{region[3]}+{x}+{y}")
-    root.wm_attributes("-topmost", True)
-    root.wm_attributes("-transparentcolor", "white")
+        root = tk.Tk()
+        root.overrideredirect(True)
+        root.geometry(f"{region[2]}x{region[3]}+{x}+{y}")
+        root.wm_attributes("-topmost", True)
+        root.wm_attributes("-transparentcolor", "white")
 
-    canvas = tk.Canvas(root, width=region[2], height=region[3], bg="white", highlightthickness=0)
-    canvas.pack()
-    canvas.create_rectangle(0, 0, region[2], region[3], outline="red", width=3)
+        canvas = tk.Canvas(root, width=region[2], height=region[3], bg="white", highlightthickness=0)
+        canvas.pack()
+        canvas.create_rectangle(0, 0, region[2], region[3], outline="red", width=3)
 
-    root.after(2000, root.destroy)  # Close after 2 seconds
-    root.mainloop()
+        root.after(100, root.destroy)
+        root.mainloop()
 
-    itemsToGet = {
-        "Lucky P": False,
-        "Speed P": True
-    }
+        itemsToGet = {
+            "Lucky P": True,
+            "Speed P": True
+        }
 
-    found = any(item in text and enabled for item, enabled in itemsToGet.items())
-    if found:
-        print("Has wanted reward")
-        click_pos("qbAcceptBtn")
-    else:
-        print("No wanted rewards")
-        click_pos("qbDismissBtn")
+        found = any(item in text and enabled for item, enabled in itemsToGet.items())
+        if found:
+            print("Has wanted reward")
+            click_pos("qbAcceptBtn")
+        else:
+            print("No wanted rewards")
+            click_pos("qbDismissBtn")
+    
+    exitBtnX = win.width / 2
+    exitBtnY = win.height * 0.867
+    move_mouse(exitBtnX, exitBtnY)
+    auto.leftClick()

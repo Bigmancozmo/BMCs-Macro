@@ -4,6 +4,8 @@ import threading, os, json, queue, time, sys
 import pyautogui as auto
 from ahk import AHK
 
+import modules.questboard as qb
+
 status = "Idle"
 coordinate_config_width = 420
 
@@ -156,7 +158,12 @@ def use_item(name):
 	click_pos("genericClose")
 	time.sleep(1)
 
-def walk_to_questboard():
+def hold_key(key, length):
+	ahk.key_down(key)
+	time.sleep(length)
+	ahk.key_up(key)
+
+def handle_questboard():
 	click_pos("collBtn")
 	click_pos("collExit")
 	ahk.send("{Escape}")
@@ -164,7 +171,7 @@ def walk_to_questboard():
 	ahk.send("R")
 	time.sleep(0.5)
 	ahk.send("{Enter}")
-	time.sleep(0.5)
+	time.sleep(1.5)
 	
 	ahk.run_script('''
 		WinActivate, Roblox
@@ -174,22 +181,30 @@ def walk_to_questboard():
 		CenterX := X + W // 2
 		CenterY := Y + H // 2
 
+		Click, up, right
 		MouseMove, %CenterX%, %CenterY%, 0
-		MouseClick, right, , , , D
+		Click, down, right
+		Sleep, 200
 		MouseMove, %CenterX%, % (CenterY + 100), 0
-		MouseClick, right, , , , U
+		Click, up, right
 	''')
-
-	time.sleep(0.5)
-	ahk.key_down('s')
-	time.sleep(3.6)
-	ahk.key_press('space')
-	time.sleep(2.0)
-	ahk.key_up('s')
-	ahk.key_down('d')
-	time.sleep(1.5)
-	ahk.key_up('d')
 	
+	auto.leftClick()
+	time.sleep(1)
+	hold_key('s', 3.5)
+	hold_key('w', 1)
+	hold_key('s', 0.8)
+	ahk.run_script('''
+		WinActivate, Roblox
+		WinWaitActive, Roblox
+	''')
+	hold_key('space', 0.1)
+	hold_key('s', 2.3)
+	hold_key('d', 0.9)
+	time.sleep(0.2)
+	ahk.key_press('e')
+	time.sleep(0.5)
+	qb.handle(config)
 
 class SettingsCoordinateOption(tk.CTkFrame):
 	def on_pick_button(self):
@@ -243,6 +258,17 @@ class SettingsCoordinateWindow(SetCoordinatesWindow):
 		self.add_option("Collection Button", "collBtn")
 		self.add_option("Collection Exit Button", "collExit")
 
+class QuestboardCoordinatesWindow(SetCoordinatesWindow):
+	def __init__(self, master, **kwargs):
+		super().__init__(master, **kwargs)
+
+		self.title("Questboard Button Coordinates")
+		self.geometry(str(coordinate_config_width)+"x450")
+
+		self.add_option("Next Quest Button", "qbRightBtn")
+		self.add_option("Accept Button", "qbAcceptBtn")
+		self.add_option("Dismiss Button", "qbDismissBtn")
+
 class SettingsTab(tk.CTkFrame):
 	def on_edit_coordinates_button(self):
 		if hasattr(self, 'set_coords_win') and self.set_coords_win.winfo_exists():
@@ -250,6 +276,20 @@ class SettingsTab(tk.CTkFrame):
 			self.set_coords_win.focus_force()
 			return
 		self.set_coords_win = SettingsCoordinateWindow(self)
+
+	def __init__(self, master, **kwargs):
+		super().__init__(master, **kwargs)
+		
+		self.edit_coordinates_button = tk.CTkButton(self, text="Edit Coordinates", command=self.on_edit_coordinates_button, width=150)
+		self.edit_coordinates_button.pack()
+
+class QuestboardTab(tk.CTkFrame):
+	def on_edit_coordinates_button(self):
+		if hasattr(self, 'set_coords_win') and self.set_coords_win.winfo_exists():
+			self.set_coords_win.lift()
+			self.set_coords_win.focus_force()
+			return
+		self.set_coords_win = QuestboardCoordinatesWindow(self)
 
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
@@ -271,6 +311,9 @@ class Tabber(tk.CTkTabview):
 		
 		self.settings_tab = SettingsTab(master=self.tab("Settings"))
 		self.settings_tab.pack()
+
+		self.questboard_tab = QuestboardTab(master=self.tab("Questboard"))
+		self.questboard_tab.pack()
 
 class ControlButtons(tk.CTkFrame):
 	def __init__(self, master, **kwargs):
@@ -340,10 +383,11 @@ class App(tk.CTk):
 		threading.Thread(target=self.run_macro, daemon=True).start()
 	
 	def run_macro(self):
-		#use_item("Biome Randomizer")
-		#use_item("Strange Controller")
-		#equip_aura(config["autoEquipAura"])
-		walk_to_questboard()
+		while True:
+			use_item("Biome Randomizer")
+			use_item("Strange Controller")
+			equip_aura(config["autoEquipAura"])
+			handle_questboard()
 
 	def on_stop(self, event):
 		global status
