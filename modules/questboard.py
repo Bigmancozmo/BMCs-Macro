@@ -3,9 +3,14 @@ from PIL import Image
 import pygetwindow as gw
 import pyautogui as auto
 import tkinter as tk
-import time, ahk
+import time, ahk, ctypes, os, sys
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+tesseractPath = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = tesseractPath
+
+if not os.path.exists(tesseractPath):
+    ctypes.windll.user32.MessageBoxW(0, "Tesseract OCR isn't installed, or isn't installed to the default directory!", "Error", 0x10)
+    sys.exit()
 
 def handle(config):
     def move_mouse(target_x, target_y):
