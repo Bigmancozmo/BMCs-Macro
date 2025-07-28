@@ -223,7 +223,7 @@ def handle_questboard():
 	
 	auto.leftClick()
 	time.sleep(1)
-	hold_key('s', 3.5)
+	hold_key('s', 5)
 	hold_key('w', 1)
 	hold_key('s', 0.8)
 	ahk.run_script('''
