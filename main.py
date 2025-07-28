@@ -7,6 +7,7 @@ from datetime import datetime
 
 import modules.questboard as qb
 from logger import Logger, log
+from updater import check_update
 
 now = datetime.now()
 formatted = now.strftime("%m-%d-%y %H-%M-%S")
@@ -15,6 +16,8 @@ os.makedirs("logs", exist_ok=True)
 sys.stdout = sys.stderr = Logger("logs/" + formatted + ".log")
 
 log("[main]: Starting up...")
+log("[main]: Checking for updates...")
+check_update()
 
 status = "Idle"
 coordinate_config_width = 420
