@@ -344,13 +344,13 @@ class Tabber(tk.CTkTabview):
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
 		
-		self.add("Biomes")
-		self.add("Webhook")
-		self.add("Merchant")
-		self.add("Item Use")
+		#self.add("Biomes")
+		#self.add("Webhook")
+		#self.add("Merchant")
+		#self.add("Item Use")
 		self.add("Settings")
 		self.add("Questboard")
-		self.add("About")
+		#self.add("About")
 		
 		self.settings_tab = SettingsTab(master=self.tab("Settings"))
 		self.settings_tab.pack()
