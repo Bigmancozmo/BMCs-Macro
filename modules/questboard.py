@@ -61,10 +61,8 @@ def handle(config):
 
         found = any(item in text and enabled for item, enabled in itemsToGet.items())
         if found:
-            print("Has wanted reward")
             click_pos("qbAcceptBtn")
         else:
-            print("No wanted rewards")
             click_pos("qbDismissBtn")
     
     exitBtnX = win.width / 2

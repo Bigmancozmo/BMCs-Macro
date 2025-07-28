@@ -3,8 +3,18 @@ from pynput import mouse, keyboard
 import threading, os, json, queue, time, sys
 import pyautogui as auto
 from ahk import AHK
+from datetime import datetime
 
 import modules.questboard as qb
+from logger import Logger, log
+
+now = datetime.now()
+formatted = now.strftime("%m-%d-%y %H-%M-%S")
+
+os.makedirs("logs", exist_ok=True)
+sys.stdout = sys.stderr = Logger("logs/" + formatted + ".log")
+
+log("[main]: Starting up...")
 
 status = "Idle"
 coordinate_config_width = 420
@@ -55,6 +65,8 @@ if os.path.exists(config_path):
 else:
 	config = default_config.copy()
 
+log("[main]: Loaded config")
+
 def close_chat():
 	ahk.run_script('''
 		WinActivate, Roblox
@@ -70,7 +82,7 @@ def close_chat():
 		auto.leftClick()
 
 def get_click_coordinates():
-	print("Click anywhere on the screen...")
+	log("Click anywhere on the screen...")
 	q = queue.Queue()
 	root = tk.CTk()
 	root.attributes("-fullscreen", True)
@@ -359,18 +371,19 @@ class ControlButtons(tk.CTkFrame):
 		global status
 		if status == "Running":
 			return
-		print("[ControlButtons]: Start")
+		log("[ControlButtons]: Start")
 		self.event_generate("<<StartPressed>>")
 		
 	def stop_button_event(self):
 		global status
 		if status == "Stopped" or status == "Idle":
 			return
-		print("[ControlButtons]: Stop")
+		log("[ControlButtons]: Stop")
 		self.event_generate("<<StopPressed>>")
 
 class App(tk.CTk):
 	def __init__(self):
+		log("[App]: Initializing...")
 		super().__init__()
 		
 		self.update_title()
@@ -390,21 +403,22 @@ class App(tk.CTk):
 		#self.bind("<F3>", self.on_stop)
 
 		self.protocol("WM_DELETE_WINDOW", self.on_window_close)
+		log("[App]: Started!")
 
 	def update_title(self):
 		self.title("BMC's Macro - "+status)
 	
 	def on_window_close(self):
-		print("[App]: Closing...")
+		log("[App]: Closing...")
 		save_settings()
-		print("[App]: Settings saved")
+		log("[App]: Settings saved")
 		self.destroy()
 
 	def on_start(self, event):
 		global status
 		if status == "Running":
 			return
-		print("[App]: Recieved start event")
+		log("[App]: Recieved start event")
 		status = "Running"
 		self.update_title()
 		time.sleep(1)
@@ -422,7 +436,7 @@ class App(tk.CTk):
 		global status
 		if status == "Stopped" or status == "Idle":
 			return
-		print("[App]: Recieved stop event")
+		log("[App]: Recieved stop event")
 		status = "Stopped"
 		self.update_title()
 		os.execv(sys.executable, ['python'] + sys.argv)
