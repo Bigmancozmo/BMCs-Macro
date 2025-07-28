@@ -3,7 +3,7 @@ import ctypes
 import webbrowser
 
 REPO = "Bigmancozmo/BMCs-Macro"
-CURRENT_VERSION = "1.0.0"
+CURRENT_VERSION = "1.0.1"
 API_URL = f"https://api.github.com/repos/{REPO}/releases/latest"
 
 def check_update():
