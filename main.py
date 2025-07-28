@@ -21,6 +21,7 @@ check_update()
 
 status = "Idle"
 coordinate_config_width = 420
+GLOBAL_PAD = 4
 
 ahk = AHK()
 ahk.set_coord_mode('Mouse', 'Screen')
@@ -57,6 +58,10 @@ default_config = {
 	"qbClaimBtnY": 10,
 	"qbDismissBtnX": 10,
 	"qbDismissBtnY": 10,
+
+	# Item use
+	"useBR": False,
+	"useSC": False,
 }
 
 if os.path.exists(config_path):
@@ -330,15 +335,35 @@ class QuestboardTab(tk.CTkFrame):
 		self.lucky_potion_checkbox = tk.CTkCheckBox(self, text="Collect Lucky Potions", command=self.collect_luckies_toggled)
 		if config["qbTakeLuckyPotion"]:
 			self.lucky_potion_checkbox.toggle();
-		self.lucky_potion_checkbox.pack()
+		self.lucky_potion_checkbox.pack(pady=GLOBAL_PAD)
 
 		self.speed_potion_checkbox = tk.CTkCheckBox(self, text="Collect Speed Potions", command=self.collect_speeds_toggled)
 		if config["qbTakeSpeedPotion"]:
 			self.speed_potion_checkbox.toggle();
-		self.speed_potion_checkbox.pack()
+		self.speed_potion_checkbox.pack(pady=GLOBAL_PAD)
 
 		self.edit_coordinates_button = tk.CTkButton(self, text="Edit Coordinates", command=self.on_edit_coordinates_button, width=150)
-		self.edit_coordinates_button.pack()
+		self.edit_coordinates_button.pack(pady=GLOBAL_PAD)
+
+class ItemUseTab(tk.CTkFrame):
+	def use_br_toggled(self):
+		config["useBR"] = self.use_br_checkbox.get() == 1
+
+	def use_sc_toggled(self):
+		config["useSC"] = self.use_sc_checkbox.get() == 1
+
+	def __init__(self, master, **kwargs):
+		super().__init__(master, **kwargs)
+
+		self.use_br_checkbox = tk.CTkCheckBox(self, text="Use Biome Randomizer", command=self.use_br_toggled)
+		if config["useBR"]:
+			self.use_br_checkbox.toggle();
+		self.use_br_checkbox.pack(pady=GLOBAL_PAD)
+
+		self.use_sc_checkbox = tk.CTkCheckBox(self, text="Use Strange Controller", command=self.use_sc_toggled)
+		if config["useSC"]:
+			self.use_sc_checkbox.toggle();
+		self.use_sc_checkbox.pack(pady=GLOBAL_PAD)
 
 class Tabber(tk.CTkTabview):
 	def __init__(self, master, **kwargs):
@@ -347,11 +372,14 @@ class Tabber(tk.CTkTabview):
 		#self.add("Biomes")
 		#self.add("Webhook")
 		#self.add("Merchant")
-		#self.add("Item Use")
+		self.add("Item Use")
 		self.add("Settings")
 		self.add("Questboard")
 		#self.add("About")
 		
+		self.item_use_tab = ItemUseTab(master=self.tab("Item Use"))
+		self.item_use_tab.pack()
+
 		self.settings_tab = SettingsTab(master=self.tab("Settings"))
 		self.settings_tab.pack()
 
@@ -430,8 +458,10 @@ class App(tk.CTk):
 	def run_macro(self):
 		while True:
 			close_chat()
-			use_item("Biome Randomizer")
-			use_item("Strange Controller")
+			if config["useSC"]:
+				use_item("strange controller")
+			if config["useBR"]:
+				use_item("biome randomizer")
 			equip_aura(config["autoEquipAura"])
 			handle_questboard()
 
