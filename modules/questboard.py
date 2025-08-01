@@ -54,9 +54,15 @@ def handle(config):
         root.after(100, root.destroy)
         root.mainloop()
 
+        # i have to do all sorts of weird things here
+        # because sarpanch is unreadable when its small
         itemsToGet = {
             "Lucky P": config["qbTakeLuckyPotion"],
-            "Speed P": config["qbTakeSpeedPotion"]
+            "Speed P": config["qbTakeSpeedPotion"],
+            "Coin": config["qbTakeCoins"],
+            "Cain": config["qbTakeCoins"],
+            "Coln": config["qbTakeCoins"],
+            "Caln": config["qbTakeCoins"],
         }
 
         found = any(item in text and enabled for item, enabled in itemsToGet.items())

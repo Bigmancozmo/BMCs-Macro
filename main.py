@@ -1,3 +1,4 @@
+import ctypes
 import customtkinter as tk
 from pynput import mouse, keyboard
 import threading, os, json, queue, time, sys
@@ -52,6 +53,7 @@ default_config = {
 	# Questboard
 	"qbTakeLuckyPotion": True,
 	"qbTakeSpeedPotion": False,
+	"qbTakeCoins": False,
 	"qbRightBtnX": 10,
 	"qbRightBtnY": 10,
 	"qbClaimBtnX": 10,
@@ -195,7 +197,7 @@ def hold_key(key, length):
 	time.sleep(length)
 	ahk.key_up(key)
 
-def handle_questboard():
+def align_camera():
 	click_pos("collBtn")
 	click_pos("collExit")
 	ahk.send("{Escape}")
@@ -223,6 +225,9 @@ def handle_questboard():
 	
 	auto.leftClick()
 	time.sleep(1)
+
+def handle_questboard():
+	align_camera()
 	hold_key('s', 5)
 	hold_key('w', 1)
 	hold_key('s', 0.8)
@@ -237,6 +242,37 @@ def handle_questboard():
 	ahk.key_press('e')
 	time.sleep(0.5)
 	qb.handle(config)
+
+def align_character():
+	log("Aligning character...")
+	time.sleep(1)
+	auto.leftClick()
+	hold_key('s', 5)
+	hold_key('a', 2)
+	hold_key('s', 3)
+	time.sleep(0.1)
+	hold_key('w', 0.1)
+	hold_key('d', 1.5)
+	time.sleep(0.1)
+	hold_key('a', 0.1)
+	hold_key('w', 0.1)
+
+def go_to_resonance():
+	close_chat()
+	align_camera()
+	align_character()
+	log("Going to Grail of Resonance")
+	hold_key('s', 0.1)
+	hold_key('space', 0.1)
+	hold_key('s', 1.5)
+	hold_key('a', 0.5)
+	hold_key('s', 5.7)
+	hold_key('a', 1.5)
+	hold_key('s', 1)
+	hold_key('a', 0.2)
+	hold_key('s', 0.3)
+	hold_key('a', 0.2)
+	hold_key('s', 0.5)
 
 class SettingsCoordinateOption(tk.CTkFrame):
 	def on_pick_button(self):
@@ -313,7 +349,7 @@ class SettingsTab(tk.CTkFrame):
 		super().__init__(master, **kwargs)
 		
 		self.edit_coordinates_button = tk.CTkButton(self, text="Edit Coordinates", command=self.on_edit_coordinates_button, width=150)
-		self.edit_coordinates_button.pack()
+		self.edit_coordinates_button.place(x=5, y=5)
 
 class QuestboardTab(tk.CTkFrame):
 	def on_edit_coordinates_button(self):
@@ -329,21 +365,39 @@ class QuestboardTab(tk.CTkFrame):
 	def collect_speeds_toggled(self):
 		config["qbTakeSpeedPotion"] = self.lucky_potion_checkbox.get() == 1
 
+	def collect_coins_toggled(self):
+		config["qbTakeCoins"] = self.coin_checkbox.get() == 1
+		if not self.disable_first_notif:
+			if(self.coin_checkbox.get() == 1):
+				response = ctypes.windll.user32.MessageBoxW(
+					0,
+					"Having this option enabled will automatically do the\nGrail of Resonance. Disable it if you don't want that.",
+					"Info",
+					0
+				)
+		self.disable_first_notif = False
+
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
-		
+		self.disable_first_notif = False
 		self.lucky_potion_checkbox = tk.CTkCheckBox(self, text="Collect Lucky Potions", command=self.collect_luckies_toggled)
 		if config["qbTakeLuckyPotion"]:
 			self.lucky_potion_checkbox.toggle();
-		self.lucky_potion_checkbox.pack(pady=GLOBAL_PAD)
+		self.lucky_potion_checkbox.place(x=5, y=40)
 
 		self.speed_potion_checkbox = tk.CTkCheckBox(self, text="Collect Speed Potions", command=self.collect_speeds_toggled)
 		if config["qbTakeSpeedPotion"]:
 			self.speed_potion_checkbox.toggle();
-		self.speed_potion_checkbox.pack(pady=GLOBAL_PAD)
+		self.speed_potion_checkbox.place(x=5, y=70)
+
+		self.coin_checkbox = tk.CTkCheckBox(self, text="Collect Coins", command=self.collect_coins_toggled)
+		if config["qbTakeCoins"]:
+			self.disable_first_notif = True
+			self.coin_checkbox.toggle();
+		self.coin_checkbox.place(x=5, y=100)
 
 		self.edit_coordinates_button = tk.CTkButton(self, text="Edit Coordinates", command=self.on_edit_coordinates_button, width=150)
-		self.edit_coordinates_button.pack(pady=GLOBAL_PAD)
+		self.edit_coordinates_button.place(x=5, y=5)
 
 class ItemUseTab(tk.CTkFrame):
 	def use_br_toggled(self):
@@ -358,16 +412,18 @@ class ItemUseTab(tk.CTkFrame):
 		self.use_br_checkbox = tk.CTkCheckBox(self, text="Use Biome Randomizer", command=self.use_br_toggled)
 		if config["useBR"]:
 			self.use_br_checkbox.toggle();
-		self.use_br_checkbox.pack(pady=GLOBAL_PAD)
+		self.use_br_checkbox.place(x=5, y=5)
 
 		self.use_sc_checkbox = tk.CTkCheckBox(self, text="Use Strange Controller", command=self.use_sc_toggled)
 		if config["useSC"]:
 			self.use_sc_checkbox.toggle();
-		self.use_sc_checkbox.pack(pady=GLOBAL_PAD)
+		self.use_sc_checkbox.place(x=5, y=35)
 
 class Tabber(tk.CTkTabview):
 	def __init__(self, master, **kwargs):
 		super().__init__(master, **kwargs)
+
+		self.configure(anchor="nw")
 		
 		#self.add("Biomes")
 		#self.add("Webhook")
@@ -378,13 +434,13 @@ class Tabber(tk.CTkTabview):
 		#self.add("About")
 		
 		self.item_use_tab = ItemUseTab(master=self.tab("Item Use"))
-		self.item_use_tab.pack()
+		self.item_use_tab.pack(fill="both", expand=True)
 
 		self.settings_tab = SettingsTab(master=self.tab("Settings"))
-		self.settings_tab.pack()
+		self.settings_tab.pack(fill="both", expand=True)
 
 		self.questboard_tab = QuestboardTab(master=self.tab("Questboard"))
-		self.questboard_tab.pack()
+		self.questboard_tab.pack(fill="both", expand=True)
 
 class ControlButtons(tk.CTkFrame):
 	def __init__(self, master, **kwargs):
@@ -430,9 +486,6 @@ class App(tk.CTk):
 		self.bind("<<StartPressed>>", self.on_start)
 		self.bind("<<StopPressed>>", self.on_stop)
 
-		#self.bind("<F1>", self.on_start)
-		#self.bind("<F3>", self.on_stop)
-
 		self.protocol("WM_DELETE_WINDOW", self.on_window_close)
 		log("[App]: Started!")
 
@@ -456,14 +509,17 @@ class App(tk.CTk):
 		threading.Thread(target=self.run_macro, daemon=True).start()
 	
 	def run_macro(self):
+		equip_aura("abyssal hunter")
+		equip_aura(config["autoEquipAura"])
 		while True:
-			close_chat()
-			if config["useSC"]:
-				use_item("strange controller")
-			if config["useBR"]:
-				use_item("biome randomizer")
-			equip_aura(config["autoEquipAura"])
-			handle_questboard()
+			#close_chat()
+			#if config["useSC"]:
+			#	use_item("strange controller")
+			#if config["useBR"]:
+			#	use_item("biome randomizer")
+			#equip_aura(config["autoEquipAura"])
+			#handle_questboard()
+			go_to_resonance()
 
 	def on_stop(self, event):
 		global status
