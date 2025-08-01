@@ -1,0 +1,94 @@
+{
+	"Nothing": {
+		"rarity": 1
+	},
+	"Common": {
+		"rarity": 2
+	},
+	"Uncommon": {
+		"rarity": 4
+	},
+	"Good": {
+		"rarity": 5
+	},
+	"Natural": {
+		"rarity": 8
+	},
+	"Rare": {
+		"rarity": 16
+	},
+	"Divinus": {
+		"rarity": 32
+	},
+	"Crystallized": {
+		"rarity": 64
+	},
+	"Rage": {
+		"rarity": 128
+	},
+	"Topaz": {
+		"rarity": 150
+	},
+	"Ruby": {
+		"rarity": 350
+	},
+	"Forbidden": {
+		"rarity": 403
+	},
+	"Emerald": {
+		"rarity": 500
+	},
+	"Gilded": {
+		"rarity": 512,
+		"biome": "SAND STORM",
+		"native": 128
+
+	},
+	"Ink": {
+		"rarity": 700
+	},
+	"Ink_LEAK": {
+		"rarity": 14000
+	},
+	"Ink_Paintballgun": {
+		"rarity": 0
+	},
+	"Jackpot": {
+		"rarity": 777
+	},
+	"Sapphire": {
+		"rarity": 800
+	},
+	"Aquamarine": {
+		"rarity": 900
+	},
+	"Wind": {
+		"rarity": 900,
+		"biome": "WINDY",
+		"native": 300
+	},
+	"Diaboli": {
+		"rarity": 1004
+	},
+	"Diaboli_Void": {
+		"rarity": 100400
+	},
+	"Precious": {
+		"rarity": 1024
+	},
+	"Atomic": {
+		"rarity": 1180
+	},
+	"Glock": {
+		"rarity": 1700
+	},
+	"Glock_shieldofthesky": {
+		"rarity": 0
+	},
+	"Magnetic": {
+		"rarity": 2048
+	},
+	"Magnetic_Reverse Polarity": {
+		"rarity": 1024000
+	}
+}
