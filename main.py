@@ -1,12 +1,13 @@
 import ctypes
 import customtkinter as tk
 from pynput import mouse, keyboard
-import threading, os, json, queue, time, sys
+import threading, os, json, queue, time, sys, requests
 import pyautogui as auto
 from ahk import AHK
 from datetime import datetime
 
 import modules.questboard as qb
+import modules.auraData as auraData
 from logger import Logger, log
 from updater import check_update
 
@@ -17,6 +18,30 @@ os.makedirs("logs", exist_ok=True)
 sys.stdout = sys.stderr = Logger("logs/" + formatted + ".log")
 
 log("[main]: Starting up...")
+log("[Auras]: Downloading aura file...")
+AURA_FILE_URL = "https://raw.githubusercontent.com/Bigmancozmo/BMCs-Macro/refs/heads/main/auras.json"
+
+def download_aura_file():
+	response = requests.get(AURA_FILE_URL)
+	if response.status_code == 200:
+		with open("auras.json", "w", encoding="utf-8") as file:
+			file.write(response.text)
+		log("[Auras]: Downloaded new aura database")
+	else:
+		log("Failed to download aura database")
+		file_exists = os.path.exists("auras.json")
+		if file_exists:
+			ctypes.windll.user32.MessageBoxW(0, "Failed to download aura database.\nKnown auras may be outdated!", "Error", 0x10)
+		else:
+			ctypes.windll.user32.MessageBoxW(0, "Failed to download aura database.\nIt appears you've never downloaded it before,\nso the macro cannot continue.", "Error", 0x10)
+			log("Exiting..")
+			sys.exit()
+
+download_aura_file()
+
+log("[main]: Loading auras...")
+auraData.setup(json.loads(open("auras.json").read()))
+
 log("[main]: Checking for updates...")
 check_update()
 
