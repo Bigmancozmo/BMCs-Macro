@@ -90,5 +90,85 @@
 	},
 	"Magnetic_Reverse Polarity": {
 		"rarity": 1024000
+	},
+	"Ash": {
+		"rarity": 2300
+	},
+	"Glacier": {
+		"rarity": 2304,
+		"biome": "SNOWY",
+		"native": 768
+	},
+	"Player": {
+		"rarity": 3000
+	},
+	"Sidereum": {
+		"rarity": 4096
+	},
+	"Bleeding": {
+		"rarity": 4444
+	},
+	"Flushed": {
+		"rarity": 6900
+	},
+	"Flushed_Lobotomy": {
+		"rarity": 69000
+	},
+	"Flushed_Troll": {
+		"rarity": 0
+	},
+	"Hazard": {
+		"rarity": 7000,
+		"biome": "CORRUPTION",
+		"native": 1400
+	},
+	"Hazard_Rays": {
+		"rarity": 70000,
+		"biome": "CORRUPTION",
+		"native": 14000
+	},
+	"Quarts": {
+		"rarity": 8192
+	},
+	"Honey": {
+		"rarity": 8335
+	},
+	"Lost Soul": {
+		"rarity": 9200
+	},
+	"Undead": {
+		"rarity": 12000,
+		"biome": "HELL",
+		"native": 2000
+	},
+	"Undead_Devil": {
+		"rarity": 66666,
+		"biome": "HELL",
+		"native": 11111
+	},
+	"Corrosive": {
+		"rarity": 12000,
+		"biome": "CORRUPTION",
+		"native": 2400
+	},
+	"Powered": {
+		"rarity": 16384
+	},
+	"Copper": {
+		"rarity": 20000
+	},
+	"Watt": {
+		"rarity": 32768
+	},
+	"Aquatic": {
+		"rarity": 40000
+	},
+	"Aquatic_Flame": {
+		"rarity": 4000000
+	},
+	"Starlight": {
+		"rarity": 50000,
+		"biome": "STARFALL",
+		"native": 10000
 	}
 }
