@@ -1,1 +1,1 @@
-pyinstaller --onefile --noconsole main.py
+pyinstaller --add-data "data;data" main.py --noconfirm

@@ -1,13 +1,20 @@
 from logging import warning
-import sys
+import sys, os, time, hashlib
 
 from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton
+from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
 
 VERSION = "v1.0.0"
 WIDTH = 660
 HEIGHT = 320
+
+print("Running at:", __file__)
+
+def resource_path(relative_path):
+    if getattr(sys, "frozen", False):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 class Tab(QWidget):
 	def __init__(self):
@@ -18,16 +25,17 @@ class InfoTab(Tab):
 		super().__init__()
 		layout = QVBoxLayout()
 
-		contents = "Failed to load info.txt"
+		contents = "Failed to load data/info.txt"
 
 		try:
-			with open("./info.txt") as f:
+			with open(resource_path("data/info.txt")) as f:
 				contents = f.read()
 		except:
-			warning("Failed to read './info.txt'")
+			warning("Failed to read 'data/info.txt'")
 
 		label = QLabel(contents)
 		label.setAlignment(Qt.AlignmentFlag.AlignTop)
+
 		layout.addWidget(label)
 		self.setLayout(layout)
 
@@ -84,5 +92,27 @@ app = QApplication(sys.argv)
 
 window = MainWindow()
 window.show()
+
+print("yo gurt")
+
+layout = QVBoxLayout()
+
+dialog = QDialog()
+dialog.setWindowTitle("Asset Updater")
+dialog.setFixedSize(QSize(250, 100))
+dialog.setContentsMargins(20,20,20,20)
+
+label = QLabel("Updating data...")
+layout.addWidget(label)
+
+pbar = QProgressBar()
+pbar.setRange(0, 100)
+pbar.setValue(0)
+layout.addWidget(pbar)
+
+dialog.setLayout(layout)
+dialog.exec()
+
+time.sleep(0.5)
 
 app.exec()
