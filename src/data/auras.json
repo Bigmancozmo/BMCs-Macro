@@ -1,1 +1,75 @@
-{}
+{
+	"Nothing": {
+		"chance": 1
+	},
+	"Common": {
+		"chance": 2
+	},
+	"Uncommon": {
+		"chance": 4
+	},
+	"Good": {
+		"chance": 5
+	},
+	"Natural": {
+		"chance": 8
+	},
+	"Rare": {
+		"chance": 16
+	},
+	"Divinus": {
+		"chance": 32
+	},
+	"Crystallized": {
+		"chance": 64
+	},
+	"Rage": {
+		"chance": 128
+	},
+	"Rage : Heated": {
+		"chance": 12800
+	},
+	"Rage : Brawler": {
+		"chance": 1280000
+	},
+	"Topaz": {
+		"chance": 150
+	},
+	"Ruby": {
+		"chance": 350
+	},
+	"Forbidden": {
+		"chance": 403
+	},
+	"Emerald": {
+		"chance": 500
+	},
+	"Gilded": {
+		"chance": 512,
+		"biome": "SAND STORM",
+		"native": 128
+	},
+	"Ink": {
+		"chance": 700
+	},
+	"Ink : LEAK": {
+		"chance": 14000
+	},
+	"Ink : Paintballgun": {
+		"chance": -1
+	},
+	"Jackpot": {
+		"chance": 777
+	},
+	"Sapphire": {
+		"chance": 800
+	},
+	"Aquamarine": {
+		"chance": 900
+	},
+	"Wind": {
+		"chance": 900,
+		"biome": "WINDY",
+		"native": 300
+	}
+}
