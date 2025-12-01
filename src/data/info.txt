@@ -2,3 +2,5 @@ Hi i made this thing
 Very unfinished
 Not many features
 Probably dont use this
+
+This line was only added to test the auto updater
