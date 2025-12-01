@@ -1,7 +1,10 @@
 from logging import warning
-import sys, os, time, hashlib
+import threading
+import sys, os, hashlib, shutil, requests
+from zipfile import ZipFile
+from io import BytesIO
 
-from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
 
@@ -11,10 +14,24 @@ HEIGHT = 320
 
 print("Running at:", __file__)
 
+def hash_folder(folder_path):
+	all_data = bytearray()
+	for root, dirs, files in os.walk(folder_path):
+		dirs.sort()
+		files.sort()
+		for f in files:
+			file_path = os.path.join(root, f)
+			with open(file_path, "rb") as file:
+				content = file.read()
+				content = content.replace(b"\r\n", b"\n")
+				all_data += content
+	return hashlib.sha256(all_data).hexdigest()
+
 def resource_path(relative_path):
     if getattr(sys, "frozen", False):
         return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
 
 class Tab(QWidget):
 	def __init__(self):
@@ -32,6 +49,7 @@ class InfoTab(Tab):
 				contents = f.read()
 		except:
 			warning("Failed to read 'data/info.txt'")
+			print("Read path:", resource_path("data/info.txt"))
 
 		label = QLabel(contents)
 		label.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -111,8 +129,54 @@ pbar.setValue(0)
 layout.addWidget(pbar)
 
 dialog.setLayout(layout)
-dialog.exec()
 
-time.sleep(0.5)
+def update_github_folder(user, repo, folder_path_in_repo, local_path, branch="main"):
+	zip_url = f"https://github.com/{user}/{repo}/archive/refs/heads/{branch}.zip"
+	with requests.get(zip_url, stream=True) as r:
+		if r.status_code != 200:
+			raise Exception(f"Failed to download zip: {r.status_code}")
+		total = int(r.headers.get('content-length', 0))
+		data = BytesIO()
+		downloaded = 0
+		for chunk in r.iter_content(chunk_size=8192):
+			if chunk:
+				data.write(chunk)
+				downloaded += len(chunk)
+				percent = min(downloaded / max(1, total) * 100, 100)
+				print(f"\rDownloading: {percent:.2f}%", end="")
+				pbar.setValue(int(percent))
+		print("\nDownload complete!")
+
+	data.seek(0)
+	try:
+		with ZipFile(data) as zip_file:
+			temp_dir = "temp_extract"
+			zip_file.extractall(temp_dir)
+			src_folder = os.path.join(temp_dir, f"{repo}-{branch}", folder_path_in_repo)
+			if os.path.exists(local_path):
+				shutil.rmtree(local_path)
+			shutil.copytree(src_folder, local_path)
+			shutil.rmtree(temp_dir)
+	except Exception as e:
+		print("Error extracting zip:", e)
+		with open("debug.zip", "wb") as f:
+			f.write(data.getvalue())
+		print("Saved downloaded file as debug.zip for inspection.")
+
+def update():
+	if "_internal" in __file__:
+		update_github_folder(
+			"Bigmancozmo",
+			"BMCs-Macro",
+			"src/data",
+			resource_path("update/data")
+		)
+	else:
+		warning("Skipping auto update - not running compiled build.")
+	
+	QTimer.singleShot(0, dialog.close)
+
+threading.Thread(target=update, daemon=True).start()
+dialog.exec()
 
 app.exec()

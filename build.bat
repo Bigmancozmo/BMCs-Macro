@@ -1,1 +1,1 @@
-pyinstaller --add-data "data;data" main.py --noconfirm
+pyinstaller --add-data "src/data;data" src/main.py --noconfirm
