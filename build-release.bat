@@ -1,1 +1,1 @@
-pyinstaller --noconsole --add-data "src/data;data" src/main.py --noconfirm
+pyinstaller --noconsole --add-data "src/data;data" src/main.py --noconfirm --onedir --noupx

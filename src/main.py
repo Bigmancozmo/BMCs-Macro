@@ -1,6 +1,6 @@
 from logging import warning
 import threading
-import sys, os, hashlib, shutil, requests
+import sys, os, hashlib, shutil, requests, time
 from zipfile import ZipFile
 from io import BytesIO
 
@@ -116,11 +116,11 @@ print("yo gurt")
 layout = QVBoxLayout()
 
 dialog = QDialog()
-dialog.setWindowTitle("Asset Updater")
+dialog.setWindowTitle("Auto Updater")
 dialog.setFixedSize(QSize(250, 100))
 dialog.setContentsMargins(20,20,20,20)
 
-label = QLabel("Updating data...")
+label = QLabel("Checking for updates...")
 layout.addWidget(label)
 
 pbar = QProgressBar()
@@ -164,6 +164,7 @@ def update_github_folder(user, repo, folder_path_in_repo, local_path, branch="ma
 		print("Saved downloaded file as debug.zip for inspection.")
 
 def update():
+	old_hash = hash_folder(resource_path("data"))
 	if "_internal" in __file__:
 		update_github_folder(
 			"Bigmancozmo",
@@ -173,8 +174,20 @@ def update():
 		)
 	else:
 		warning("Skipping auto update - not running compiled build.")
+		QTimer.singleShot(0, dialog.close)
+		return
 	
 	QTimer.singleShot(0, dialog.close)
+	new_hash = hash_folder(resource_path("update/data"))
+
+	time.sleep(1)
+
+	if old_hash != new_hash:
+		time.sleep(0.1)
+		os.system(f"cd {resource_path("")} && rmdir /s /q data && xcopy update\data data /E /I")
+		print("RESTARTING")
+		time.sleep(0.1)
+		os.execv(sys.executable, [sys.executable] + sys.argv)
 
 threading.Thread(target=update, daemon=True).start()
 dialog.exec()
