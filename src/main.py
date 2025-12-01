@@ -8,54 +8,14 @@ from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
 
+from tabs import InfoTab
+from util import resource_path, hash_folder
+
 VERSION = "v1.0.0"
 WIDTH = 660
 HEIGHT = 320
 
 print("Running at:", __file__)
-
-def hash_folder(folder_path):
-	all_data = bytearray()
-	for root, dirs, files in os.walk(folder_path):
-		dirs.sort()
-		files.sort()
-		for f in files:
-			file_path = os.path.join(root, f)
-			with open(file_path, "rb") as file:
-				content = file.read()
-				content = content.replace(b"\r\n", b"\n")
-				all_data += content
-	return hashlib.sha256(all_data).hexdigest()
-
-def resource_path(relative_path):
-    if getattr(sys, "frozen", False):
-        return os.path.join(sys._MEIPASS, relative_path)
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(base_path, relative_path)
-
-class Tab(QWidget):
-	def __init__(self):
-		super().__init__()
-
-class InfoTab(Tab):
-	def __init__(self):
-		super().__init__()
-		layout = QVBoxLayout()
-
-		contents = "Failed to load data/info.txt"
-
-		try:
-			with open(resource_path("data/info.txt")) as f:
-				contents = f.read()
-		except:
-			warning("Failed to read 'data/info.txt'")
-			print("Read path:", resource_path("data/info.txt"))
-
-		label = QLabel(contents)
-		label.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-		layout.addWidget(label)
-		self.setLayout(layout)
 
 class Footer(QWidget):
 	def __init__(self):
