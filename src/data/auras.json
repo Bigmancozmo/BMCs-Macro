@@ -61,7 +61,9 @@
 		"chance": -1
 	},
 	"Jackpot": {
-		"chance": 777
+		"chance": 777,
+		"biome": "SAND STORM",
+		"native": 194
 	},
 	"Sapphire": {
 		"chance": 800
