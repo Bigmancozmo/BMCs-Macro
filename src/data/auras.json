@@ -41,7 +41,9 @@
 		"chance": 350
 	},
 	"Forbidden": {
-		"chance": 403
+		"chance": 403,
+		"biome": "CYBERSPACE",
+		"native": 202
 	},
 	"Emerald": {
 		"chance": 500
