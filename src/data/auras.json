@@ -1,6 +1,8 @@
 {
 	"Nothing": {
-		"chance": 1
+		"chance": -1,
+		"biome": "THE LIMBO",
+		"native": 1
 	},
 	"Common": {
 		"chance": 2

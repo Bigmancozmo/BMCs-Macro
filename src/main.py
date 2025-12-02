@@ -1,6 +1,6 @@
 from logging import warning
 import threading
-import sys, os, hashlib, shutil, requests, time
+import sys, os, shutil, requests, time
 from zipfile import ZipFile
 from io import BytesIO
 
@@ -8,7 +8,7 @@ from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
 
-from tabs import InfoTab
+from tabs.tabs import AurasTab, InfoTab
 from util import resource_path, hash_folder
 
 VERSION = "v1.0.0"
@@ -54,9 +54,7 @@ class MainWindow(QMainWindow):
 
 		tabber = QTabWidget()
 		tabber.addTab(InfoTab(), "Info")
-		#tabber.addTab(Tab("Biomes"), "Biomes")
-		#tabber.addTab(Tab("Questboard"), "Questboard")
-		#tabber.addTab(Tab("Scheduler"), "Scheduler")
+		tabber.addTab(AurasTab(), "Auras")
 
 		footer = Footer()
 
