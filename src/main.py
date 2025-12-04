@@ -7,11 +7,13 @@ from io import BytesIO
 from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
+from PyQt6.QtGui import QKeySequence, QShortcut
 
 from tabs.tabs import AurasTab, InfoTab
 from util import resource_path, hash_folder
+from vars import VERSION
+from webhook import macroClosed, startMessage, stopMessage
 
-VERSION = "v1.0.0"
 WIDTH = 660
 HEIGHT = 320
 
@@ -32,13 +34,25 @@ class Footer(QWidget):
 		startButton = QPushButton("Start (F1)")
 		stopButton = QPushButton("Stop (F3)")
 
+		startButton.clicked.connect(self.onStart)
+		stopButton.clicked.connect(self.onStop)
+
 		startButton.setFixedSize(QSize(100, height))
 		stopButton.setFixedSize(QSize(100, height))
 
 		layout.addWidget(startButton)
 		layout.addWidget(stopButton)
 
+		QShortcut(QKeySequence("F1"), self).activated.connect(self.onStart)
+		QShortcut(QKeySequence("F3"), self).activated.connect(self.onStop)
+
 		self.setLayout(layout)
+	
+	def onStart(self):
+		startMessage()
+
+	def onStop(self):
+		stopMessage()
 
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -151,3 +165,5 @@ threading.Thread(target=update, daemon=True).start()
 dialog.exec()
 
 app.exec()
+
+macroClosed()
