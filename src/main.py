@@ -142,7 +142,7 @@ def update():
 
 	if old_hash != new_hash:
 		time.sleep(0.1)
-		os.system(f"cd {resource_path("")} && rmdir /s /q data && xcopy update\data data /E /I")
+		os.system(f"cd {resource_path("")} && rmdir /s /q data && xcopy update\\data data /E /I")
 		print("RESTARTING")
 		time.sleep(0.1)
 		os.execv(sys.executable, [sys.executable] + sys.argv)

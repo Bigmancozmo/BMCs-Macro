@@ -65,7 +65,7 @@ class AuraInfo(QWidget):
 		infoLayout.setContentsMargins(4, 0, 4, 0)
 
 		chanceText = QLabel("Chance - " + str(chance))
-		biomeText = QLabel("Chance - " + str(biome))
+		biomeText = QLabel("Biome - " + str(biome))
 		nativeRarityText = QLabel("Native - " + str(nativeChance))
 
 		infoLayout.addWidget(chanceText)
