@@ -77,5 +77,14 @@
 		"chance": 900,
 		"biome": "WINDY",
 		"native": 300
+	},
+	"Diaboli": {
+		"chance": 1004
+	},
+	"Diaboli : Void": {
+		"chance": 100400
+	},
+	"Precious": {
+		"chance": 1024
 	}
 }
