@@ -1,6 +1,5 @@
-Hi i made this thing
-Very unfinished
-Not many features
-Probably dont use this
+BMC's Macro for Sol's RNG
 
-This line was only added to test the auto updater
+* will soon be an all-purpose macro
+* but for now it's just biomes
+* and some aura info
