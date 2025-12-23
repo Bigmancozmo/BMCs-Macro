@@ -1,5 +1,12 @@
 import os, hashlib, sys
 
+def hex_to_rgb(hex_code):
+    hex_code = hex_code.lstrip('#')
+    return tuple(int(hex_code[i:i+2], 16) for i in (0, 2, 4))
+
+def pack_rgb(r, g, b):
+	return (r << 16) + (g << 8) + b
+
 def hash_folder(folder_path):
 	all_data = bytearray()
 	for root, dirs, files in os.walk(folder_path):

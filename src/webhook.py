@@ -1,4 +1,4 @@
-import requests, threading, json
+import requests, threading, json, time
 from io import BytesIO
 from PIL import Image
 import util
@@ -13,6 +13,12 @@ DISCORD_FIELD = {
 	"value": DISCORD_INVITE
 }
 
+def getTimestampField():
+	return {
+		"name": "Timestamp",
+		"value": f'<t:{int(time.time())}:R>'
+	}
+
 def sendMessage(data):
 	threading.Thread(target=requests.post, args=(WEBHOOK,), kwargs={"json": data}).start()
 
@@ -22,7 +28,7 @@ def startMessage():
 			{
 				"description": "# Macro Started",
 				"color": COLORS["green"],
-				"fields": [DISCORD_FIELD],
+				"fields": [DISCORD_FIELD, getTimestampField()],
 				"footer": {
 					"text": VERSION_TEXT
 				}
@@ -36,6 +42,7 @@ def macroClosed():
 			{
 				"description": "# Application Closed",
 				"color": COLORS["red"],
+				"fields": [DISCORD_FIELD, getTimestampField()],
 				"footer": {
 					"text": VERSION_TEXT
 				}
@@ -49,7 +56,7 @@ def stopMessage():
 			{
 				"description": "# Macro Stopped",
 				"color": COLORS["red"],
-				"fields": [DISCORD_FIELD],
+				"fields": [DISCORD_FIELD, getTimestampField()],
 				"footer": {
 					"text": VERSION_TEXT
 				}
@@ -70,27 +77,52 @@ def averageNonWhites(url):
 	else:
 		return (255, 255, 255)
 
-def sendBiomeStart(name, imageID):
+def getBiomeStuff(name, imageID):
 	imageReq = requests.get(f'https://thumbnails.roblox.com/v1/assets?assetIds={imageID}&size=150x150&format=Png&isCircular=false')
 	imageUrl = ""
 	r, g, b = (0, 0, 0)
 	if imageReq.status_code == 200:
-		imageUrl = imageReq.json()["data"][0]["imageUrl"]
-		r, g, b = averageNonWhites(imageUrl)
+		if len(imageReq.json()["data"]) > 0:
+			imageUrl = imageReq.json()["data"][0]["imageUrl"]
+			r, g, b = averageNonWhites(imageUrl)
 	
-	discord_color = (r << 16) + (g << 8) + b
+	discord_color = util.pack_rgb(r, g, b)
 
-	with open("file.json", "r") as f:
+	with open(util.resource_path("data/biomeColors.json"), "r") as f:
 		data = json.load(f)
+		if name in data:
+			r, g, b = util.hex_to_rgb(data[name])
+			discord_color = util.pack_rgb(r, g, b)
+	
+	return (imageUrl, discord_color)
 
-	print(data)
+def sendBiomeEnd(name, imageID):
+	imageUrl, discord_color = getBiomeStuff(name, imageID)
+	sendMessage({
+		"embeds": [
+			{
+				"description": "# <:icons_dleave:875754473023229972> " + name + " ended",
+				"color": discord_color,
+				"fields": [DISCORD_FIELD, getTimestampField()],
+				"footer": {
+					"text": VERSION_TEXT
+				},
+				"thumbnail": {
+					"url": imageUrl
+	  			}
+			}
+		],
+	})
+
+def sendBiomeStart(name, imageID):
+	imageUrl, discord_color = getBiomeStuff(name, imageID)
 
 	sendMessage({
 		"embeds": [
 			{
-				"description": "# " + name + " started",
+				"description": "# <:icons_djoin:875754472834469948> " + name + " started",
 				"color": discord_color,
-				"fields": [DISCORD_FIELD],
+				"fields": [DISCORD_FIELD, getTimestampField()],
 				"footer": {
 					"text": VERSION_TEXT
 				},
