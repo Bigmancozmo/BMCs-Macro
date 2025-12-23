@@ -1,17 +1,25 @@
+from logging import warning
 import requests, threading, json, time
 from io import BytesIO
 from PIL import Image
+from settings import getKey
 import util
 
 from vars import VERSION, DISCORD_INVITE, COLORS
 
-WEBHOOK = "https://discord.com/api/webhooks/1445951285739389010/hgzgaDMYNsw-gOSylO6EJFCdGUGfXyGTLfRriVU18IOJPqgOZ-xEvWDFh_T80OzzJ-Id"
+WEBHOOK = ""
 VERSION_TEXT = f"BMC's Macro | {VERSION}"
 
 DISCORD_FIELD = {
 	"name": "Discord Server",
 	"value": DISCORD_INVITE
 }
+
+def reloadWebhook():
+	global WEBHOOK
+	WEBHOOK = getKey("WEBHOOK_URL")
+	if WEBHOOK == "":
+		warning("No webhook was provided, requests may fail.")
 
 def getTimestampField():
 	return {
@@ -20,6 +28,7 @@ def getTimestampField():
 	}
 
 def sendMessage(data):
+	reloadWebhook()
 	threading.Thread(target=requests.post, args=(WEBHOOK,), kwargs={"json": data}).start()
 
 def startMessage():

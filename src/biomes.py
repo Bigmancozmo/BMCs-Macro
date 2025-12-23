@@ -16,6 +16,8 @@ lastLine = 0
 lastBiome = DEFAULT_BIOME
 lastImageID = 0
 
+running = False
+
 def handleLine(line):
 	global lastBiome
 	global lastImageID
@@ -36,21 +38,35 @@ def handleLine(line):
 		warning("Failed to read biome name")
 		warning(e)
 
-# Find the last BloxstrapRPC line and handle it, to know the starting biome.
-with open(latestLog, "r", encoding="utf-8", errors="ignore") as f:
-	lines = f.readlines()
-	lastLine = len(lines)
-	for line in reversed(lines):
-		if "[BloxstrapRPC]" in line:
-			handleLine(line)
-			break
 
-# Start the SPYWARE
-while True:
+def start():
+	print("Started biome component")
+	global running, lastLine, lastBiome, lastImageID
+	running = True
+
+	latestLog = getLatestLogPath()
+	lastLine = 0
+	lastBiome = DEFAULT_BIOME
+	lastImageID = 0
+
 	with open(latestLog, "r", encoding="utf-8", errors="ignore") as f:
 		lines = f.readlines()
-	newLines = lines[lastLine:]
-	for line in newLines:
-		handleLine(line)
-	lastLine = len(lines)
-	time.sleep(0.05)
+		lastLine = len(lines)
+		for line in reversed(lines):
+			if "[BloxstrapRPC]" in line:
+				print("most recent status line:", line)
+				handleLine(line)
+				break
+
+	while running:
+		with open(latestLog, "r", encoding="utf-8", errors="ignore") as f:
+			lines = f.readlines()
+		newLines = lines[lastLine:]
+		for line in newLines:
+			handleLine(line)
+		lastLine = len(lines)
+		time.sleep(0.05)
+
+def stop():
+	global running
+	running = False

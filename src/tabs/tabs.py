@@ -1,9 +1,11 @@
 from logging import warning
+from pydoc import text
 from PyQt6.QtCore import Qt, QPoint
-from PyQt6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QScrollArea
+from PyQt6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QScrollArea, QLineEdit
 from PyQt6.QtGui import QPainter, QPolygon
 import json
 
+from settings import getKey, setKey
 from util import resource_path
 
 class Tab(QWidget):
@@ -100,7 +102,7 @@ class AurasTab(Tab):
 
 		if succeeded:
 			try:
-				container_layout.addWidget(QLabel("Click on auras to view info about them"))
+				container_layout.addWidget(QLabel("This is every aura the macro knows about\nClick on auras to view info about them"))
 
 				for aura, data in aura_data.items():
 					biome = "N/A"
@@ -130,3 +132,23 @@ class AurasTab(Tab):
 		main_layout = QVBoxLayout()
 		main_layout.addWidget(scroll)
 		self.setLayout(main_layout)
+
+class BiomesTab(Tab):
+	def __init__(self):
+		super().__init__()
+
+		main_layout = QVBoxLayout()
+		main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+		
+		main_layout.addWidget(QLabel("Webhook URL"))
+
+		self.webhookInput = QLineEdit(text=getKey("WEBHOOK_URL"))
+		self.webhookInput.setPlaceholderText("Discord Webhook URL...")
+		self.webhookInput.textEdited.connect(self.webhookTextEdited)
+
+		main_layout.addWidget(self.webhookInput)
+
+		self.setLayout(main_layout)
+	
+	def webhookTextEdited(self):
+		setKey("WEBHOOK_URL", self.webhookInput.text())

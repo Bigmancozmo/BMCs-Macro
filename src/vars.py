@@ -1,6 +1,4 @@
-from datetime import datetime, timezone
-
-VERSION = "v1.0.0"
+VERSION = "v0.0.1"
 DISCORD_INVITE = "https://discord.gg/mYf8HEkDVC"
 
 COLORS = {

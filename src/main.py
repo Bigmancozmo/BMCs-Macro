@@ -5,11 +5,12 @@ from zipfile import ZipFile
 from io import BytesIO
 
 from PyQt6.QtCore import QSize, Qt, QTimer
-from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar
+from PyQt6.QtWidgets import QApplication, QTabWidget, QMainWindow, QLabel, QWidget, QPushButton, QDialog, QProgressBar, QLineEdit
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout
 from PyQt6.QtGui import QKeySequence, QShortcut
 
-from tabs.tabs import AurasTab, InfoTab
+import biomes
+from tabs.tabs import AurasTab, BiomesTab, InfoTab
 from util import resource_path, hash_folder
 from vars import VERSION
 from webhook import macroClosed, startMessage, stopMessage
@@ -25,6 +26,8 @@ class Footer(QWidget):
 		
 		height = 35
 
+		self.prevStatus = "stopped"
+		self.status = "stopped"
 		self.setFixedHeight(height)
 
 		layout = QHBoxLayout()
@@ -49,10 +52,23 @@ class Footer(QWidget):
 		self.setLayout(layout)
 	
 	def onStart(self):
-		startMessage()
+		self.status = "running"
+		self.onStatusChange()
+		threading.Thread(target=biomes.start).start()
 
 	def onStop(self):
-		stopMessage()
+		self.status = "stopped"
+		self.onStatusChange()
+		biomes.stop()
+	
+	def onStatusChange(self):
+		if(self.prevStatus == self.status):
+			return
+		self.prevStatus = self.status
+		if self.status == "stopped":
+			stopMessage()
+		if self.status == "running":
+			startMessage()
 
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -69,14 +85,24 @@ class MainWindow(QMainWindow):
 		tabber = QTabWidget()
 		tabber.addTab(InfoTab(), "Info")
 		tabber.addTab(AurasTab(), "Auras")
+		tabber.addTab(BiomesTab(), "Biomes")
 
-		footer = Footer()
+		self.footer = Footer()
 
 		layout.addWidget(tabber)
-		layout.addWidget(footer)
+		layout.addWidget(self.footer)
 		central.setLayout(layout)
 
 		self.setCentralWidget(central)
+	
+	def mousePressEvent(self, event):
+		focused_widget = QApplication.focusWidget()
+		if isinstance(focused_widget, QLineEdit):
+			focused_widget.clearFocus()
+		QMainWindow.mousePressEvent(self, event)
+	
+	def handleClose(self):
+		self.footer.onStop()
 
 app = QApplication(sys.argv)
 
@@ -166,4 +192,5 @@ dialog.exec()
 
 app.exec()
 
-macroClosed()
+window.handleClose()
+#macroClosed()
